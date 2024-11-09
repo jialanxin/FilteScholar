@@ -1,0 +1,7 @@
+.aider*
+.DS_Store
+merged_eml_content.txt
+.vscode/
+20*/
+__pycache__/
+.commit_message.txt
