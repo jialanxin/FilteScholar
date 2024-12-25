@@ -77,11 +77,19 @@ The 2D magnet Fe3GaTe2 has received considerable attention for its high Curie te
 
     def test_acs_nano(self):
         sample_text = """[HTML] Atomically Precise Control of Topological State Hybridization in Conjugated Polymers
-A Jiménez-Martín, Z Sosnová, D Soler, B Mallada… - ACS nano, 2024
-Realization of topological quantum states in carbon nanostructures has recently emerged as a promising platform for hosting highly coherent and controllable quantum dot spin qubits. However, their adjustable manipulation remains elusive …"""
+A Jiménez-Martín, Z Sosnová, D Soler, B Mallada… - ACS nano, 2024
+Realization of topological quantum states in carbon nanostructures has recently emerged as a promising platform for hosting highly coherent and controllable quantum dot spin qubits. However, their adjustable manipulation remains elusive …"""
         paragraphs = [sample_text]
         result = filter_paragraphs_containing_keywords(paragraphs)
-        self.assertIn('ACS nano', result)
+        self.assertIn('ACS Nano', result)
+
+    def test_acs_nano_different_case(self):
+        sample_text = """Light-Induced Ultrafast Glide-Mirror Symmetry Breaking in Black Phosphorus
+C Bao, F Wang, H Zhong, S Zhou, T Lin, H Zhang… - ACS Nano, 2024
+Symmetry breaking plays an important role in the fields of physics, ranging from particle physics to condensed matter physics. In solid-state materials, phase transitions are deeply linked to the underlying symmetry breakings, resulting in a rich …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertIn('ACS Nano', result)
 
     # Negative test cases for excluded journals
     def test_small_science(self):
@@ -125,6 +133,46 @@ This paper discusses innovations in advanced materials technologies."""
         paragraphs = [sample_text]
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Advanced Materials', result)
+
+    def test_progress_in_natural_science(self):
+        sample_text = """Regulation of charge density wave and superconductivity in kagome superconductor CsV3Sb5 by intercalation
+H Xiao, Y Zhang, L Yu, M Mi, X Liu, Q Cui, B Lyu, Y Guo… - Progress in Natural Science …, 2024
+Abstract AV 3 Sb 5 (A​=​ K, Rb, and Cs), recently discovered van der Waals Kagome metals, exhibit a multitude of intriguing strongly correlated phenomena, particularly the unconventional charge density wave (CDW) and superconductivity …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
+    def test_science_and_technology_of(self):
+        sample_text = """[HTML] Metastable body-centered cubic CoMnFe alloy films with perpendicular magnetic anisotropy for spintronics memory
+D Kumar, M Ishibashi, T Roy, M Tsujikawa, M Shirai… - Science and Technology of …, 2024
+ABSTRACT A body-centered cubic (bcc) FeCo (B) is a current standard magnetic material for perpendicular magnetic tunnel junctions (p-MTJs) showing both large tunnel magnetoresistance (TMR) and high interfacial perpendicular magnetic …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
+    def test_light_science(self):
+        sample_text = """[HTML] Simultaneous achieving negative photoconductivity response and volatile resistive switching in Cs2CoCl4 single crystals towards artificial optoelectronic synapse
+H Jiang, H Ji, Z Ma, D Yang, J Ma, M Zhang, X Li… - Light: Science & …, 2024
+The development of negative photoconductivity (NPC)-related devices is of great significance for numerous applications, such as optoelectronic detection, neuromorphic computing, and optoelectronic synapses. Here, an unusual but …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
+    def test_surface_science(self):
+        sample_text = """Growth and electronic structure of the nodal line semimetal in monolayer Cu2Si on Cu (111)
+J Xu, C Liu, Y Guo, G Zhang, K Liu, H Qian, K Nie… - Surface Science, 2024
+Cu 2 Si, a single-layer two-dimensional material with a honeycomb structure, has been proposed to have Dirac nodal line fermions. In this study, the synchrotron radiation X-ray photoelectron spectroscopy, ultraviolet photoelectron spectroscopy …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
+    def test_cell_reports_physical_science(self):
+        sample_text = """[HTML] Area-selective deposition of lateral van der Waals semiconductor heterostructures
+CS Lee, HJ Han, JH Ahn, G Jin - Cell Reports Physical Science, 2024
+Scalable area-selective deposition of van der Waals semiconductor monolayer enables the tunable design of atomically thin, two-dimensional electronic and photonic material platforms. Here, we report lateral patterning of tunable …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
 
 if __name__ == '__main__':
     unittest.main()

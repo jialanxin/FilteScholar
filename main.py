@@ -41,7 +41,7 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
     partial_pattern = r'\b(Advanced Functional(?: Materials)?)\b'
     partial_regex = re.compile(partial_pattern, re.IGNORECASE)
 
-    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science & Applications|Chemical Science|Structural Science|Advanced Materials Technologies)\b'
+    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology of|Surface Science|Cell Reports Physical Science)\b'
     exclude_regex = re.compile(exclude_pattern, re.IGNORECASE)
 
     keyword_paragraphs: Dict[str, Set[str]] = {}
@@ -49,7 +49,8 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
         'science advances': 'Science',
         'nature': 'Nature',
         'advanced materials': 'Advanced Materials',
-        'advanced functional materials': 'Advanced Materials'
+        'advanced functional materials': 'Advanced Materials',
+        'acs nano': 'ACS Nano'
     }
 
     for paragraph in paragraphs:
