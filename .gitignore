@@ -1,6 +1,6 @@
 .aider*
 .DS_Store
-merged_eml_content.txt
+merged_eml_content*.txt
 .vscode/
 20*/
 __pycache__/

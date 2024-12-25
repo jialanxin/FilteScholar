@@ -53,6 +53,16 @@ if __name__ == "__main__":
     if not script_dir.exists() or not script_dir.is_dir():
         raise ValueError(f"错误: {script_dir} 不是一个有效的目录")
 
+    # 检查是否存在旧的merged_eml_content.txt文件
+    output_file = "merged_eml_content.txt"
+    old_file = Path(output_file)
+    if old_file.exists():
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        new_name = f"merged_eml_content_{timestamp}.txt"
+        old_file.rename(new_name)
+        print(f"已将旧文件重命名为: {new_name}")
+
     # 列出当前目录下的.eml文件
     eml_contents = []
     process_eml_files(script_dir, eml_contents)

@@ -1,5 +1,6 @@
 import re
 from typing import List, Dict, Set
+import argparse
 
 def import_text_by_paragraphs(file_path: str) -> List[str]:
     """
@@ -110,9 +111,33 @@ def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScho
                 file.write(formatted_paragraph)
 
 if __name__ == "__main__":
-    file_path = "merged_eml_content.txt"  # 替换为你的文本文件路径
-    paragraphs = import_text_by_paragraphs(file_path)
+    # 文件路径设置
+    new_file = "merged_eml_content.txt"  # 新文件路径
+    old_file = "merged_eml_content_20241225_221551.txt"  # 旧文件路径，根据实际时间戳修改
+    output_file = "FileScholar.md"  # 输出文件名
 
-    keyword_paragraphs = filter_paragraphs_containing_keywords(paragraphs)
+    # 处理新文件
+    new_paragraphs = import_text_by_paragraphs(new_file)
+    new_keyword_paragraphs = filter_paragraphs_containing_keywords(new_paragraphs)
 
-    save_to_markdown(keyword_paragraphs)
+    # 处理旧文件
+    old_paragraphs = import_text_by_paragraphs(old_file)
+    old_keyword_paragraphs = filter_paragraphs_containing_keywords(old_paragraphs)
+
+    # 创建差异字典
+    diff_paragraphs = {}
+    
+    # 对于新文件中的每个关键词
+    for keyword, new_para_set in new_keyword_paragraphs.items():
+        # 如果关键词在旧文件中不存在，直接添加所有段落
+        if keyword not in old_keyword_paragraphs:
+            diff_paragraphs[keyword] = new_para_set
+        else:
+            # 如果关键词存在，只添加旧文件中没有的段落
+            diff_set = new_para_set - old_keyword_paragraphs[keyword]
+            if diff_set:
+                diff_paragraphs[keyword] = diff_set
+
+    # 保存差异到markdown文件
+    save_to_markdown(diff_paragraphs, output_file)
+    print(f"差异内容已保存到: {output_file}")
