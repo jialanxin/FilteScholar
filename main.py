@@ -113,31 +113,51 @@ def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScho
 if __name__ == "__main__":
     # 文件路径设置
     new_file = "merged_eml_content.txt"  # 新文件路径
-    old_file = "merged_eml_content_20241225_221551.txt"  # 旧文件路径，根据实际时间戳修改
+    old_files = [  # 旧文件路径列表
+        "merged_eml_content_20241228_204424.txt",
+        "merged_eml_content_20241231_170307.txt",
+        # 可以添加更多旧文件...
+    ]
     output_file = "FileScholar.md"  # 输出文件名
 
     # 处理新文件
     new_paragraphs = import_text_by_paragraphs(new_file)
     new_keyword_paragraphs = filter_paragraphs_containing_keywords(new_paragraphs)
 
-    # 处理旧文件
-    old_paragraphs = import_text_by_paragraphs(old_file)
-    old_keyword_paragraphs = filter_paragraphs_containing_keywords(old_paragraphs)
+    # 创建一个字典来存储所有旧文件中的段落
+    all_old_paragraphs = {}
+    
+    # 处理所有旧文件
+    for old_file in old_files:
+        try:
+            old_paragraphs = import_text_by_paragraphs(old_file)
+            old_keyword_paragraphs = filter_paragraphs_containing_keywords(old_paragraphs)
+            
+            # 合并所有旧文件的内容
+            for keyword, para_set in old_keyword_paragraphs.items():
+                if keyword not in all_old_paragraphs:
+                    all_old_paragraphs[keyword] = para_set
+                else:
+                    all_old_paragraphs[keyword].update(para_set)
+        except FileNotFoundError:
+            print(f"警告: 找不到旧文件 {old_file}，将跳过此文件")
+            continue
 
     # 创建差异字典
     diff_paragraphs = {}
     
     # 对于新文件中的每个关键词
     for keyword, new_para_set in new_keyword_paragraphs.items():
-        # 如果关键词在旧文件中不存在，直接添加所有段落
-        if keyword not in old_keyword_paragraphs:
+        # 如果关键词在所有旧文件中都不存在，直接添加所有段落
+        if keyword not in all_old_paragraphs:
             diff_paragraphs[keyword] = new_para_set
         else:
-            # 如果关键词存在，只添加旧文件中没有的段落
-            diff_set = new_para_set - old_keyword_paragraphs[keyword]
+            # 如果关键词存在于旧文件中，只添加所有旧文件中都没有的段落
+            diff_set = new_para_set - all_old_paragraphs[keyword]
             if diff_set:
                 diff_paragraphs[keyword] = diff_set
 
     # 保存差异到markdown文件
     save_to_markdown(diff_paragraphs, output_file)
     print(f"差异内容已保存到: {output_file}")
+    print(f"处理完成。比较的旧文件数量: {len(old_files)}")
