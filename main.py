@@ -42,7 +42,7 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
     partial_pattern = r'\b(Advanced Functional(?: Materials)?)\b'
     partial_regex = re.compile(partial_pattern, re.IGNORECASE)
 
-    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology of|Surface Science|Cell Reports Physical Science)\b'
+    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology of|Surface Science|Cell Reports Physical Science|Mechanics of Advanced Materials and Structures)\b'
     exclude_regex = re.compile(exclude_pattern, re.IGNORECASE)
 
     keyword_paragraphs: Dict[str, Set[str]] = {}
@@ -55,6 +55,8 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
     }
 
     for paragraph in paragraphs:
+        # 标准化处理：去除首尾空白和多余换行符
+        paragraph = paragraph.strip()
         lines = paragraph.strip().split('\n')
         if len(lines) < 2:
             continue  # 跳过不完整的条目
@@ -78,7 +80,8 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
 
             if keyword not in keyword_paragraphs:
                 keyword_paragraphs[keyword] = set()
-            keyword_paragraphs[keyword].add(paragraph)
+            # 使用标准化后的段落
+            keyword_paragraphs[keyword].add('\n'.join(lines))
 
     return keyword_paragraphs
 
@@ -116,6 +119,10 @@ if __name__ == "__main__":
     old_files = [  # 旧文件路径列表
         "merged_eml_content_20241228_204424.txt",
         "merged_eml_content_20241231_170307.txt",
+        "merged_eml_content_20250102_155608.txt",
+        "merged_eml_content_20250104_185416.txt",
+        "merged_eml_content_20250106_112323.txt",
+        "merged_eml_content_20250109_165140.txt",
         # 可以添加更多旧文件...
     ]
     output_file = "FileScholar.md"  # 输出文件名
@@ -139,8 +146,12 @@ if __name__ == "__main__":
                     all_old_paragraphs[keyword] = para_set
                 else:
                     all_old_paragraphs[keyword].update(para_set)
+            print(f"成功读取并处理文件: {old_file}")
         except FileNotFoundError:
             print(f"警告: 找不到旧文件 {old_file}，将跳过此文件")
+            continue
+        except Exception as e:
+            print(f"警告: 处理文件 {old_file} 时发生错误: {str(e)}，将跳过此文件")
             continue
 
     # 创建差异字典

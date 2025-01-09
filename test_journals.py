@@ -174,5 +174,36 @@ Scalable area-selective deposition of van der Waals semiconductor monolayer enab
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Science', result)
 
+    def test_mechanics_of_advanced_materials(self):
+        sample_text = """Dynamics of transverse domain wall in bilayer ferromagnetic-heavy metal nanostructures: Interplay of spin-orbit torque, dry-friction dissipation, and the interfacial …
+A Halder, S Dolui, S Dwivedi - Mechanics of Advanced Materials and Structures, 2024
+This work deals with the static and dynamic characteristics of the transverse Bloch domain wall within a bilayer nanostructure comprising a ferromagnetic layer and a non-magnetic heavy metal layer. We examine the spatiotemporal evolution of …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Advanced Materials', result)
+
+
+    def test_string_normalization(self):
+        # 测试带有不同空白字符和换行符的相同文章
+        sample_text_1 = """
+Quantum Anomalous Layer Hall Effect in Realistic van der Waals Heterobilayers
+Y Tian, X Kong, C Jiang, HJ Zhang, WJ Gong - Nano Letters, 2024
+The quantum anomalous layer Hall effect (QALHE), characterized by the precise control of the quantum anomalous Hall effect on different layers due to spin-layer-chirality coupling in van der Waals (vdW) layered materials, is of great importance in …"""
+
+        sample_text_2 = """Quantum Anomalous Layer Hall Effect in Realistic van der Waals Heterobilayers
+Y Tian, X Kong, C Jiang, HJ Zhang, WJ Gong - Nano Letters, 2024
+The quantum anomalous layer Hall effect (QALHE), characterized by the precise control of the quantum anomalous Hall effect on different layers due to spin-layer-chirality coupling in van der Waals (vdW) layered materials, is of great importance in …
+"""
+        # 处理两个样本
+        result_1 = filter_paragraphs_containing_keywords([sample_text_1])
+        result_2 = filter_paragraphs_containing_keywords([sample_text_2])
+
+        # 获取 Nano Letters 中的文章集合
+        articles_1 = result_1.get('Nano Letters', set())
+        articles_2 = result_2.get('Nano Letters', set())
+
+        # 验证两个集合的交集等于任意一个集合（即它们包含相同的元素）
+        self.assertEqual(articles_1, articles_2, "带有不同空白字符的相同文章应该被识别为相同")
+
 if __name__ == '__main__':
     unittest.main()
