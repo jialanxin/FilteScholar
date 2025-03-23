@@ -11,13 +11,22 @@ def eml_to_text(eml_file):
         
         for part in msg.walk():
             if part.get_content_type() == "text/html":
-                html_content = part.get_payload(decode=True).decode("utf-8","ignore")
+                html_content = part.get_payload(decode=True)
+                if isinstance(html_content, bytes):
+                    html_content = html_content.decode("utf-8", "ignore")
+                # Ensure we have a string before passing to BeautifulSoup
+                if not isinstance(html_content, str):
+                    html_content = str(html_content)
                 # 解析HTML内容并提取文本
                 soup = BeautifulSoup(html_content, 'html.parser')
                 
-                for child in soup.body.div.contents:
-                    text += child.get_text()
-                    text += "\n"
+                if soup.body and soup.body.div:
+                    for child in soup.body.div.contents:
+                        text += child.get_text()
+                        text += "\n"
+                else:
+                    # If no body or div, just get all text
+                    text += soup.get_text()
         
         
         return text
@@ -46,7 +55,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.folder is None:  # 检查 args.folder 是否为 None
-        script_dir = Path("./merged_07_09")  # 默认相对路径
+        script_dir = Path("./merged_20_23")  # 默认相对路径
     else:
         script_dir = Path(args.folder)
     # 确保路径存在并且是一个目录
