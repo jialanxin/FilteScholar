@@ -114,7 +114,7 @@ def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScho
         'Advanced Materials',
         'Nano Letters',
         'ACS Nano',
-        'arxiv'
+        'arXiv'
     ]
     
     # 分离出需要排序的期刊和其他期刊
@@ -131,9 +131,8 @@ def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScho
         
         # 最后写其他期刊（按字母顺序）
         if other_keys:
-            file.write("# Others\n\n")
             for keyword in other_keys:
-                file.write(f"## {keyword}\n\n")  # 二级标题
+                file.write(f"# {keyword}\n\n")  # 一级标题
                 for paragraph in sorted(paragraphs[keyword]):
                     formatted_paragraph = format_paragraph(paragraph)
                     file.write(formatted_paragraph)

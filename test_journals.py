@@ -211,7 +211,7 @@ The quantum anomalous layer Hall effect (QALHE), characterized by the precise co
             'Advanced Materials': {'para1', 'para2'},
             'Nano Letters': {'para3'},
             'Science': {'para4'},
-            'arxiv': {'para5'},
+            'arXiv': {'para5'},
             'Physical Review Letters': {'para6'},
             'Nature': {'para7'},
             'Other Journal': {'para8'}
@@ -227,13 +227,12 @@ The quantum anomalous layer Hall effect (QALHE), characterized by the precise co
         # 检查标题顺序
         expected_order = [
             "# Science",
-            "# Nature",
+            "# Nature", 
             "# Physical Review Letters",
             "# Advanced Materials",
             "# Nano Letters",
-            "# arxiv",
-            "# Others",
-            "## Other Journal"
+            "# arXiv",
+            "# Other Journal"
         ]
         
         # 获取实际出现的标题
