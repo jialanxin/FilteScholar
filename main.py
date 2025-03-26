@@ -147,7 +147,8 @@ if __name__ == "__main__":
 	    "merged_eml_content_20250312_164613.txt",
         "merged_eml_content_20250317_182409.txt",
         "merged_eml_content_20250319_162840.txt",
-        "merged_eml_content_20250323_213542.txt"
+        "merged_eml_content_20250323_213542.txt",
+        "merged_eml_content_20250326_210237.txt",
         # 可以添加更多旧文件...
     ]
     output_file = "FileScholar.md"  # 输出文件名
