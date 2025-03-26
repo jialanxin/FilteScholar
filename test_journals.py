@@ -1,5 +1,5 @@
 import unittest
-from main import filter_paragraphs_containing_keywords
+from main import filter_paragraphs_containing_keywords, save_to_markdown
 
 class TestJournals(unittest.TestCase): 
     def test_nature(self):
@@ -204,6 +204,48 @@ The quantum anomalous layer Hall effect (QALHE), characterized by the precise co
 
         # 验证两个集合的交集等于任意一个集合（即它们包含相同的元素）
         self.assertEqual(articles_1, articles_2, "带有不同空白字符的相同文章应该被识别为相同")
+
+    def test_journal_sorting(self):
+        # 准备测试数据
+        test_paragraphs = {
+            'Advanced Materials': {'para1', 'para2'},
+            'Nano Letters': {'para3'},
+            'Science': {'para4'},
+            'arxiv': {'para5'},
+            'Physical Review Letters': {'para6'},
+            'Nature': {'para7'},
+            'Other Journal': {'para8'}
+        }
+        
+        # 调用保存方法
+        save_to_markdown(test_paragraphs, "temp_test.md")
+        
+        # 验证文件内容顺序
+        with open("temp_test.md", "r", encoding="utf-8") as f:
+            content = f.read()
+            
+        # 检查标题顺序
+        expected_order = [
+            "# Science",
+            "# Nature",
+            "# Physical Review Letters",
+            "# Advanced Materials",
+            "# Nano Letters",
+            "# arxiv",
+            "# Others",
+            "## Other Journal"
+        ]
+        
+        # 获取实际出现的标题
+        actual_headings = [line for line in content.split('\n') if line.startswith('#')]
+        
+        # 验证顺序是否正确
+        for expected, actual in zip(expected_order, actual_headings):
+            self.assertEqual(actual, expected)
+            
+        # 清理临时文件
+        import os
+        os.remove("temp_test.md")
 
 if __name__ == '__main__':
     unittest.main()
