@@ -92,6 +92,14 @@ Symmetry breaking plays an important role in the fields of physics, ranging from
         self.assertIn('ACS Nano', result)
 
     # Negative test cases for excluded journals
+    def test_avs_quantum_science(self):
+        sample_text = """Higher-fold topological excitations in phononic and electronic phases of chiral-type BaXY (X= Pt, Pd; Y= P, As, Sb, Bi) materials: A first-principles investigation
+B Paul, S PC, RAB Villaos, ZQ Huang, H Lin… - AVS Quantum Science, 2025
+Non-symmorphic chiral crystals hosting higher-fold fermions and bosons are of great interest due to the recent experimental realizations. The specialty of these higher-fold fermions and bosons is that they possess long Fermi arcs connecting the Brillouin …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
     def test_small_science(self):
         sample_text = """[HTML] A new study on the effects of quantum entanglement
 E Men, D Li, H Zhang… - Small Science, 2024
