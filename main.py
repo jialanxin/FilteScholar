@@ -101,17 +101,42 @@ def format_paragraph(paragraph: str) -> str:
 
 def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScholar.md") -> None:
     """
-    将过滤后的段落保存到Markdown文件中。
+    将过滤后的段落保存到Markdown文件中，按指定顺序排序期刊标签。
 
     :param paragraphs: 将关键词映射到段落集合的字典。
     :param file_name: 输出Markdown文件的名称。
     """
+    # 定义排序顺序
+    sorted_order = [
+        'Science', 
+        'Nature', 
+        'Physical Review Letters',
+        'Advanced Materials',
+        'Nano Letters',
+        'ACS Nano',
+        'arxiv'
+    ]
+    
+    # 分离出需要排序的期刊和其他期刊
+    ordered_keys = [k for k in sorted_order if k in paragraphs]
+    other_keys = sorted([k for k in paragraphs.keys() if k not in sorted_order])
+    
     with open(file_name, 'w', encoding='utf-8') as file:
-        for keyword, keyword_paragraphs in paragraphs.items():
+        # 先写排序的期刊
+        for keyword in ordered_keys:
             file.write(f"# {keyword}\n\n")
-            for paragraph in keyword_paragraphs:
+            for paragraph in sorted(paragraphs[keyword]):  # 段落按字母排序
                 formatted_paragraph = format_paragraph(paragraph)
                 file.write(formatted_paragraph)
+        
+        # 最后写其他期刊（按字母顺序）
+        if other_keys:
+            file.write("# Others\n\n")
+            for keyword in other_keys:
+                file.write(f"## {keyword}\n\n")  # 二级标题
+                for paragraph in sorted(paragraphs[keyword]):
+                    formatted_paragraph = format_paragraph(paragraph)
+                    file.write(formatted_paragraph)
 
 if __name__ == "__main__":
     # 文件路径设置
