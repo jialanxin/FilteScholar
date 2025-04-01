@@ -190,6 +190,15 @@ This work deals with the static and dynamic characteristics of the transverse Bl
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Advanced Materials', result)
 
+    def test_nano_letters_case_insensitive(self):
+        # 测试大小写不同的期刊名称
+        sample_text_1 = """Sign Reversal of Hall Conductivity in Polycrystalline FeRh Films via the Topological Hall Effect in the Antiferromagnetic Phase
+YH Kim, JW Choi, JM Cho, GS Kim, NW Park, G Park… - Nano letters, 2025
+The intrinsic Berry curvature in ferromagnetic (FM) materials significantly influences Hall conductivity during the antiferromagnetic (AFM)-to-FM phase transition, as demonstrated through the anomalous Hall effect (AHE). First-principles calculations …"""
+        paragraphs = [sample_text_1]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertIn('Nano Letters', result)
+
 
     def test_string_normalization(self):
         # 测试带有不同空白字符和换行符的相同文章
