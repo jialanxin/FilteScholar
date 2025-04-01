@@ -49,9 +49,13 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
     keyword_mapping = {
         'science advances': 'Science',
         'nature': 'Nature',
-        'advanced materials': 'Advanced Materials',
+        'advanced materials': 'Advanced Materials', 
         'advanced functional materials': 'Advanced Materials',
-        'acs nano': 'ACS Nano'
+        'acs nano': 'ACS Nano',
+        'nano letters': 'Nano Letters',
+        'physical review x': 'Physical Review X',
+        'physical review letters': 'Physical Review Letters',
+        'arxiv': 'arXiv'
     }
 
     for paragraph in paragraphs:
