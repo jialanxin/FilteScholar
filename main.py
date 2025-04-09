@@ -42,7 +42,7 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
     partial_pattern = r'\b(Advanced Functional(?: Materials)?)\b'
     partial_regex = re.compile(partial_pattern, re.IGNORECASE)
 
-    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology of|Surface Science|Cell Reports Physical Science|Mechanics of Advanced Materials and Structures|AVS Quantum Science)\b'
+    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology of|Surface Science|Cell Reports Physical Science|Mechanics of Advanced Materials and Structures|AVS Quantum Science|Superconductor Science)\b'
     exclude_regex = re.compile(exclude_pattern, re.IGNORECASE)
 
     keyword_paragraphs: Dict[str, Set[str]] = {}
@@ -114,6 +114,7 @@ def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScho
     sorted_order = [
         'Science', 
         'Nature', 
+        'Physical Review X',
         'Physical Review Letters',
         'Advanced Materials',
         'Nano Letters',
@@ -145,13 +146,13 @@ if __name__ == "__main__":
     # 文件路径设置
     new_file = "merged_eml_content.txt"  # 新文件路径
     old_files = [  # 旧文件路径列表
-        "merged_eml_content_20250303_194342.txt",
 	    "merged_eml_content_20250312_164613.txt",
         "merged_eml_content_20250317_182409.txt",
         "merged_eml_content_20250319_162840.txt",
         "merged_eml_content_20250323_213542.txt",
         "merged_eml_content_20250326_210237.txt",
         "merged_eml_content_20250401_165747.txt",
+        "merged_eml_content_20250409_170648.txt"
         # 可以添加更多旧文件...
     ]
     output_file = "FileScholar.md"  # 输出文件名

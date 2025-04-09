@@ -174,6 +174,14 @@ Cu 2 Si, a single-layer two-dimensional material with a honeycomb structure, has
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Science', result)
 
+    def test_superconductor_science(self):
+        sample_text = """Phonon-mediated superconductivity in topological kagome metals Rh3M2S2 (M= Pb, In, Tl)
+WY Liu, X Wang, Y Li, YH Wei, M Zhong, MQ Kuang - Superconductor Science and …, 2025
+Kagome materials possess intriguing properties and have attracted considerable interest. Inspired by the extensive research on kagome superconductors, here, we investigated the superconducting and topological properties of the trilayer kagome …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
     def test_cell_reports_physical_science(self):
         sample_text = """[HTML] Area-selective deposition of lateral van der Waals semiconductor heterostructures
 CS Lee, HJ Han, JH Ahn, G Jin - Cell Reports Physical Science, 2024
@@ -230,8 +238,9 @@ The quantum anomalous layer Hall effect (QALHE), characterized by the precise co
             'Science': {'para4'},
             'arXiv': {'para5'},
             'Physical Review Letters': {'para6'},
-            'Nature': {'para7'},
-            'Other Journal': {'para8'}
+            'Physical Review X': {'para7'},
+            'Nature': {'para8'},
+            'Other Journal': {'para9'}
         }
         
         # 调用保存方法
@@ -245,6 +254,7 @@ The quantum anomalous layer Hall effect (QALHE), characterized by the precise co
         expected_order = [
             "# Science",
             "# Nature", 
+            "# Physical Review X",
             "# Physical Review Letters",
             "# Advanced Materials",
             "# Nano Letters",
