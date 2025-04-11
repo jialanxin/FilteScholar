@@ -62,6 +62,11 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
         # 标准化处理：去除首尾空白和多余换行符
         paragraph = paragraph.strip()
         lines = paragraph.strip().split('\n')
+        
+        # 移除首行的[PDF][HTML]等前缀
+        if lines:
+            lines[0] = re.sub(r'^\[\w+\]\s*', '', lines[0]).strip()
+            
         if len(lines) < 2:
             continue  # 跳过不完整的条目
 
@@ -88,6 +93,29 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
             keyword_paragraphs[keyword].add('\n'.join(lines))
 
     return keyword_paragraphs
+
+def calculate_diff_paragraphs(new_paragraphs: Dict[str, Set[str]], 
+                             old_paragraphs: Dict[str, Set[str]]) -> Dict[str, Set[str]]:
+    """
+    计算新旧段落之间的差异内容
+    
+    :param new_paragraphs: 新文件中的段落字典（关键词 -> 段落集合）
+    :param old_paragraphs: 所有旧文件的合并段落字典
+    :return: 包含差异内容的段落字典
+    """
+    diff_paragraphs = {}
+    
+    for keyword, new_para_set in new_paragraphs.items():
+        # 如果关键词在所有旧文件中都不存在，添加所有新段落
+        if keyword not in old_paragraphs:
+            diff_paragraphs[keyword] = new_para_set
+        else:
+            # 仅添加旧文件中不存在的新段落
+            diff_set = new_para_set - old_paragraphs[keyword]
+            if diff_set:
+                diff_paragraphs[keyword] = diff_set
+                
+    return diff_paragraphs
 
 def format_paragraph(paragraph: str) -> str:
     """
@@ -184,19 +212,8 @@ if __name__ == "__main__":
             print(f"警告: 处理文件 {old_file} 时发生错误: {str(e)}，将跳过此文件")
             continue
 
-    # 创建差异字典
-    diff_paragraphs = {}
-    
-    # 对于新文件中的每个关键词
-    for keyword, new_para_set in new_keyword_paragraphs.items():
-        # 如果关键词在所有旧文件中都不存在，直接添加所有段落
-        if keyword not in all_old_paragraphs:
-            diff_paragraphs[keyword] = new_para_set
-        else:
-            # 如果关键词存在于旧文件中，只添加所有旧文件中都没有的段落
-            diff_set = new_para_set - all_old_paragraphs[keyword]
-            if diff_set:
-                diff_paragraphs[keyword] = diff_set
+    # 计算差异内容
+    diff_paragraphs = calculate_diff_paragraphs(new_keyword_paragraphs, all_old_paragraphs)
 
     # 保存差异到markdown文件
     save_to_markdown(diff_paragraphs, output_file)

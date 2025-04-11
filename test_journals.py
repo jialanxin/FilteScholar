@@ -230,6 +230,22 @@ The quantum anomalous layer Hall effect (QALHE), characterized by the precise co
         # 验证两个集合的交集等于任意一个集合（即它们包含相同的元素）
         self.assertEqual(articles_1, articles_2, "带有不同空白字符的相同文章应该被识别为相同")
 
+    def test_pdf_in_prefix(self):
+        # 测试如果有[PDF]在段落前缀中，能否被正确和无前缀的段落识别为同一个段落
+        sample_text_1 = """[PDF] Anomalous Nonlinear Magnetoconductivity in van der Waals Magnet CrSBr
+J Jo, M Suárez‐Rodríguez, S Mañas‐Valero… - Advanced Materials, 2025
+Nonlinear magnetoconductivity (NLMC) is a nonreciprocal transport response arising in non‐centrosymmetric materials. However, this ordinary NLMC signal vanishes at zero magnetic field, limiting its potential for applications. Here, the observation of an …"""
+        sample_text_2 = """Anomalous Nonlinear Magnetoconductivity in van der Waals Magnet CrSBr
+J Jo, M Suárez‐Rodríguez, S Mañas‐Valero… - Advanced Materials, 2025
+Nonlinear magnetoconductivity (NLMC) is a nonreciprocal transport response arising in non‐centrosymmetric materials. However, this ordinary NLMC signal vanishes at zero magnetic field, limiting its potential for applications. Here, the observation of an …"""
+        # 处理两个样本
+        keyword_paragraphs_1 = filter_paragraphs_containing_keywords([sample_text_1])
+        keyword_paragraphs_2 = filter_paragraphs_containing_keywords([sample_text_2])
+        from main import calculate_diff_paragraphs
+        diff_paragraphs = calculate_diff_paragraphs(keyword_paragraphs_1, keyword_paragraphs_2)
+        self.assertEqual(diff_paragraphs, {}, "带有[PDF]前缀的段落应该被识别为相同的段落")
+
+
     def test_journal_sorting(self):
         # 准备测试数据
         test_paragraphs = {
