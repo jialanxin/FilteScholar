@@ -55,7 +55,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.folder is None:  # 检查 args.folder 是否为 None
-        script_dir = Path("./merged_01_09")  # 默认相对路径
+        script_dir = Path("./merged_07_16")  # 默认相对路径
     else:
         script_dir = Path(args.folder)
     # 确保路径存在并且是一个目录
