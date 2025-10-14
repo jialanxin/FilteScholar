@@ -174,10 +174,18 @@ if __name__ == "__main__":
     # 文件路径设置
     new_file = "merged_eml_content.txt"  # 新文件路径
     old_files = [  # 旧文件路径列表
-        "merged_eml_content_20250516_200010.txt",
-        "merged_eml_content_20250520_230517.txt",
-        "merged_eml_content_20250528_201045.txt",
-        "merged_eml_content_20250605_162446.txt"
+        "merged_eml_content_20250627_205231.txt",
+        "merged_eml_content_20250713_201346.txt",
+        "merged_eml_content_20250722_145114.txt",
+        "merged_eml_content_20250728_151056.txt",
+        "merged_eml_content_20250805_190903.txt",
+        "merged_eml_content_20250810_221059.txt",
+        "merged_eml_content_20250820_141746.txt",
+        "merged_eml_content_20250825_200748.txt",
+        "merged_eml_content_20250911_193611.txt",
+        "merged_eml_content_20250922_150634.txt",
+        "merged_eml_content_20251001_160713.txt",
+        "merged_eml_content_20251009_151036.txt"
         # 可以添加更多旧文件...
     ]
     output_file = "FileScholar.md"  # 输出文件名
