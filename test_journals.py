@@ -108,6 +108,14 @@ This study explores the implications of quantum entanglement in modern physics."
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Science', result)
 
+    def test_solid_state_science_research(self):
+        sample_text = """Influence of Cu insertion layer, in-situ and post annealing on Perpendicular Magnetic Anisotropy of Co/Ni multilayers
+R Hussain, SK Srivastava, D Pajić - Solid-State Science & Research 2025
+Magnetic materials with perpendicular magnetic anisotropy (PMA) have attracted a significant deal of interest due to their potential applications in high-density magnetic recording media as well as spintronic devices [1]. Among the numerous candidates …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
     def test_journal_of_applied_science(self):
         sample_text = """[HTML] Advances in semiconductor technology
 J Doe, A Smith… - Journal of Applied Science, 2024
@@ -120,6 +128,14 @@ This paper discusses recent advancements in semiconductor technology."""
         sample_text = """[HTML] Innovations in material science
 A Johnson… - Science & Technology, 2024
 This article reviews innovations in material science."""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
+    def test_science_and_technology_full_title(self):
+        sample_text = """Effects of Se-doping in topological hourglass semimetal Nb₃SiTe₆
+Y Wang, D Xu, G Wang, L Nie, H Li, Z Xiang, B Lei… - … Science and Technology, 2026
+In low-dimensional superconducting systems, novel properties emerge due to quantum confinement effects, en-hanced electron correlations and spin-orbit interactions. Nb₃SiTe₆ is a topological hourglass semimetal with both one-and two …"""
         paragraphs = [sample_text]
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Science', result)

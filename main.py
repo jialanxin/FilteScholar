@@ -42,7 +42,7 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
     partial_pattern = r'\b(Advanced Functional(?: Materials)?)\b'
     partial_regex = re.compile(partial_pattern, re.IGNORECASE)
 
-    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology of|Surface Science|Cell Reports Physical Science|Mechanics of Advanced Materials and Structures|AVS Quantum Science|Superconductor Science)\b'
+    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology(?: of)?|Solid-State Science(?:\s*&\s*Research)?|Surface Science|Cell Reports Physical Science|Mechanics of Advanced Materials and Structures|AVS Quantum Science|Superconductor Science)\b'
     exclude_regex = re.compile(exclude_pattern, re.IGNORECASE)
 
     keyword_paragraphs: Dict[str, Set[str]] = {}
@@ -185,7 +185,11 @@ if __name__ == "__main__":
         "merged_eml_content_20250911_193611.txt",
         "merged_eml_content_20250922_150634.txt",
         "merged_eml_content_20251001_160713.txt",
-        "merged_eml_content_20251009_151036.txt"
+        "merged_eml_content_20251009_151036.txt",
+        "merged_eml_content_20251024_153722.txt",
+        "merged_eml_content_20251103_162803.txt",
+        "merged_eml_content_20260106_142240.txt",
+        "merged_eml_content_20260123_104350.txt"
         # 可以添加更多旧文件...
     ]
     output_file = "FileScholar.md"  # 输出文件名
