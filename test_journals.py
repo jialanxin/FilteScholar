@@ -1,5 +1,5 @@
 import unittest
-from main import filter_paragraphs_containing_keywords, save_to_markdown
+from main import calculate_diff_paragraphs, filter_paragraphs_containing_keywords, save_to_markdown
 
 class TestJournals(unittest.TestCase): 
     def test_nature(self):
@@ -90,6 +90,35 @@ Symmetry breaking plays an important role in the fields of physics, ranging from
         paragraphs = [sample_text]
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertIn('ACS Nano', result)
+
+    def test_deduplicate_same_article_with_different_scraped_content(self):
+        sample_text_1 = """On-Chip Direct Synthesis of 2D Semimetals for van der Waals Metal–Semiconductor Junction Transistor Arrays
+J Yang, J Im, J Kim, H Lee, J Park, S Lee, J Lee… - ACS nano, 2026
+On-Chip Direct Synthesis of 2D Semimetals for van der Waals Metal–Semiconductor
+Junction Transistor Arrays | ACS Nano Recently Viewedclose modal ACS ACS
+Publications C&EN CAS Access through institution Log In ACS Publications. Most …"""
+        sample_text_2 = """[HTML] On-Chip Direct Synthesis of 2D Semimetals for van der Waals Metal–Semiconductor Junction Transistor Arrays
+J Yang, J Im, J Kim, H Lee, J Park, S Lee, J Lee… - ACS nano, 2026
+Metallic two-dimensional (2D) materials enable van der Waals (vdW) contacts that suppress metal-and defect-induced gap states via an intrinsic interlayer gap; however, their conventional integration through film transfer or high-temperature …"""
+        result = filter_paragraphs_containing_keywords([sample_text_1, sample_text_2])
+
+        self.assertIn('ACS Nano', result)
+        self.assertEqual(len(result['ACS Nano']), 1, "同一篇文章的不同抓取内容应该在同一次导入中被去重")
+
+    def test_deduplicate_same_article_when_calculating_diff(self):
+        sample_text_1 = """On-Chip Direct Synthesis of 2D Semimetals for van der Waals Metal–Semiconductor Junction Transistor Arrays
+J Yang, J Im, J Kim, H Lee, J Park, S Lee, J Lee… - ACS nano, 2026
+On-Chip Direct Synthesis of 2D Semimetals for van der Waals Metal–Semiconductor
+Junction Transistor Arrays | ACS Nano Recently Viewedclose modal ACS ACS
+Publications C&EN CAS Access through institution Log In ACS Publications. Most …"""
+        sample_text_2 = """[HTML] On-Chip Direct Synthesis of 2D Semimetals for van der Waals Metal–Semiconductor Junction Transistor Arrays
+J Yang, J Im, J Kim, H Lee, J Park, S Lee, J Lee… - ACS nano, 2026
+Metallic two-dimensional (2D) materials enable van der Waals (vdW) contacts that suppress metal-and defect-induced gap states via an intrinsic interlayer gap; however, their conventional integration through film transfer or high-temperature …"""
+        keyword_paragraphs_1 = filter_paragraphs_containing_keywords([sample_text_1])
+        keyword_paragraphs_2 = filter_paragraphs_containing_keywords([sample_text_2])
+        diff_paragraphs = calculate_diff_paragraphs(keyword_paragraphs_1, keyword_paragraphs_2)
+
+        self.assertEqual(diff_paragraphs, {}, "同一篇文章的不同抓取内容不应在 diff 中被当作新增")
 
     # Negative test cases for excluded journals
     def test_avs_quantum_science(self):
@@ -257,7 +286,6 @@ Nonlinear magnetoconductivity (NLMC) is a nonreciprocal transport response arisi
         # 处理两个样本
         keyword_paragraphs_1 = filter_paragraphs_containing_keywords([sample_text_1])
         keyword_paragraphs_2 = filter_paragraphs_containing_keywords([sample_text_2])
-        from main import calculate_diff_paragraphs
         diff_paragraphs = calculate_diff_paragraphs(keyword_paragraphs_1, keyword_paragraphs_2)
         self.assertEqual(diff_paragraphs, {}, "带有[PDF]前缀的段落应该被识别为相同的段落")
 

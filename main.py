@@ -25,6 +25,22 @@ def create_regex_pattern(journals: Set[str]) -> re.Pattern:
     pattern = r'\b(' + '|'.join(re.escape(journal) for journal in journals) + r')\b'
     return re.compile(pattern, re.IGNORECASE)
 
+def normalize_article_key(paragraph: str) -> str:
+    """
+    基于标题和期刊行生成稳定的文章去重键。
+
+    :param paragraph: 输入段落。
+    :return: 用于去重的规范化键。
+    """
+    lines = [line.strip() for line in paragraph.strip().split('\n') if line.strip()]
+    if not lines:
+        return ''
+
+    lines[0] = re.sub(r'^\[\w+\]\s*', '', lines[0]).strip()
+    title = re.sub(r'\s+', ' ', lines[0]).casefold()
+    journal_line = re.sub(r'\s+', ' ', lines[1]).casefold() if len(lines) > 1 else ''
+    return f"{title}\n{journal_line}"
+
 def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Set[str]]:
     """
     过滤包含目标期刊关键词的段落。
@@ -89,8 +105,11 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
 
             if keyword not in keyword_paragraphs:
                 keyword_paragraphs[keyword] = set()
-            # 使用标准化后的段落
-            keyword_paragraphs[keyword].add('\n'.join(lines))
+            normalized_paragraph = '\n'.join(lines)
+            article_key = normalize_article_key(normalized_paragraph)
+
+            if not any(normalize_article_key(existing) == article_key for existing in keyword_paragraphs[keyword]):
+                keyword_paragraphs[keyword].add(normalized_paragraph)
 
     return keyword_paragraphs
 
@@ -111,7 +130,11 @@ def calculate_diff_paragraphs(new_paragraphs: Dict[str, Set[str]],
             diff_paragraphs[keyword] = new_para_set
         else:
             # 仅添加旧文件中不存在的新段落
-            diff_set = new_para_set - old_paragraphs[keyword]
+            old_keys = {normalize_article_key(paragraph) for paragraph in old_paragraphs[keyword]}
+            diff_set = {
+                paragraph for paragraph in new_para_set
+                if normalize_article_key(paragraph) not in old_keys
+            }
             if diff_set:
                 diff_paragraphs[keyword] = diff_set
                 
@@ -189,7 +212,12 @@ if __name__ == "__main__":
         "merged_eml_content_20251024_153722.txt",
         "merged_eml_content_20251103_162803.txt",
         "merged_eml_content_20260106_142240.txt",
-        "merged_eml_content_20260123_104350.txt"
+        "merged_eml_content_20260123_104350.txt",
+        "merged_eml_content_20260203_103826.txt",
+        "merged_eml_content_20260227_203804.txt",
+        "merged_eml_content_20260303_145505.txt",
+        "merged_eml_content_20260308_161604.txt",
+        "merged_eml_content_20260319_163753.txt"
         # 可以添加更多旧文件...
     ]
     output_file = "FileScholar.md"  # 输出文件名
