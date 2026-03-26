@@ -203,6 +203,14 @@ ABSTRACT A body-centered cubic (bcc) FeCo (B) is a current standard magnetic mat
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Science', result)
 
+    def test_optoelectronic_science_and_materials(self):
+        sample_text = """Comparative study of band structures and sulfur vacancies in monolayer and few-layer MoS2 via first-principles calculations
+K Chen - ... Conference on Optoelectronic Science and Materials ..., 2025
+In the realm of two-dimensional materials, molybdenum disulfide (MoS2) has emerged as a promising candidate for various electronic and optoelectronic applications, owing to its distinctive physical and chemical properties. The electronic ..."""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
     def test_light_science(self):
         sample_text = """[HTML] Simultaneous achieving negative photoconductivity response and volatile resistive switching in Cs2CoCl4 single crystals towards artificial optoelectronic synapse
 H Jiang, H Ji, Z Ma, D Yang, J Ma, M Zhang, X Li… - Light: Science & …, 2024
