@@ -129,6 +129,14 @@ Non-symmorphic chiral crystals hosting higher-fold fermions and bosons are of gr
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Science', result)
 
+    def test_quantum_science(self):
+        sample_text = """[PDF] Quantum Key Distribution using hBN Single-Photon Emitters at a 40 MHz Clock Rate
+ÖS Tapşın, F Ağlarci, RG Pousa, DKL Oi, M Gündogan… - Quantum Science and …, 2026
+Room-temperature solid-state quantum emitters are essential for building practical and scalable quantum communication systems, yet their application has been critically hindered by the slow operational speeds of corresponding modulation …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
     def test_small_science(self):
         sample_text = """[HTML] A new study on the effects of quantum entanglement
 E Men, D Li, H Zhang… - Small Science, 2024
