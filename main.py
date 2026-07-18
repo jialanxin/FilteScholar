@@ -195,8 +195,8 @@ def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScho
 
 if __name__ == "__main__":
     # 文件路径设置
-    new_file = "merged_eml_content.txt"  # 新文件路径
-    old_files = [  # 旧文件路径列表
+    new_file = "merged_eml_content_20260718_174927.txt"  # 本次新文件
+    old_files = [  # 手动控制参与比较的旧文件范围
         "merged_eml_content_20250627_205231.txt",
         "merged_eml_content_20250713_201346.txt",
         "merged_eml_content_20250722_145114.txt",
@@ -219,10 +219,17 @@ if __name__ == "__main__":
         "merged_eml_content_20260308_161604.txt",
         "merged_eml_content_20260319_163753.txt",
         "merged_eml_content_20260402_173111.txt",
-        "merged_eml_content_20260508_154530.txt"
-        # 可以添加更多旧文件...
+        "merged_eml_content_20260508_154530.txt",
+        "merged_eml_content_20260602_164137.txt",
+        "merged_eml_content_20260619_160707.txt",
+        "merged_eml_content_20260706_190337.txt",
+        "merged_eml_content_20260710_154551.txt",
+        "merged_eml_content_20260718_172442.txt",
+        # 可以添加或删除旧文件来手动控制比较范围
     ]
     output_file = "FileScholar.md"  # 输出文件名
+
+    print(f"本次处理文件: {new_file}")
 
     # 处理新文件
     new_paragraphs = import_text_by_paragraphs(new_file)

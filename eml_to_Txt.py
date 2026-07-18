@@ -2,6 +2,17 @@ import email
 from bs4 import BeautifulSoup
 from pathlib import Path
 import argparse
+from datetime import datetime
+
+
+OUTPUT_PREFIX = "merged_eml_content"
+
+
+def timestamped_output_path(now=None):
+    """Return a timestamped output path for the current parsing run."""
+    current_time = now or datetime.now()
+    timestamp = current_time.strftime("%Y%m%d_%H%M%S")
+    return Path(f"{OUTPUT_PREFIX}_{timestamp}.txt")
 
 def eml_to_text(eml_file):
     with open(eml_file, 'rb') as f:
@@ -55,22 +66,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.folder is None:  # 检查 args.folder 是否为 None
-        script_dir = Path("./merged_20260404_20260508")  # 默认相对路径
+        script_dir = Path("./merged_20260713_20260718")  # 默认相对路径
     else:
         script_dir = Path(args.folder)
     # 确保路径存在并且是一个目录
     if not script_dir.exists() or not script_dir.is_dir():
         raise ValueError(f"错误: {script_dir} 不是一个有效的目录")
-
-    # 检查是否存在旧的merged_eml_content.txt文件
-    output_file = "merged_eml_content.txt"
-    old_file = Path(output_file)
-    if old_file.exists():
-        from datetime import datetime
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        new_name = f"merged_eml_content_{timestamp}.txt"
-        old_file.rename(new_name)
-        print(f"已将旧文件重命名为: {new_name}")
 
     # 列出当前目录下的.eml文件
     eml_contents = []
@@ -79,9 +80,9 @@ if __name__ == "__main__":
     # 将解析内容合并成一个字符串
     merged_content = "\n".join(eml_contents)
 
-    # 将合并后的内容写入到一个新的文本文件中
-    output_file = "merged_eml_content.txt"
-    with open(output_file, 'w', encoding='utf-8') as f:
+    # 使用本次解析时间命名输出文件，不再生成无时间戳文件
+    output_file = timestamped_output_path()
+    with open(output_file, 'x', encoding='utf-8') as f:
         f.write(merged_content)
 
     print("合并后的内容已保存到:", output_file)
