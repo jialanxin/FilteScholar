@@ -58,7 +58,7 @@ def filter_paragraphs_containing_keywords(paragraphs: List[str]) -> Dict[str, Se
     partial_pattern = r'\b(Advanced Functional(?: Materials)?)\b'
     partial_regex = re.compile(partial_pattern, re.IGNORECASE)
 
-    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology(?: of)?|Solid-State Science(?:\s*&\s*Research)?|Surface Science|Cell Reports Physical Science|Mechanics of Advanced Materials and Structures|AVS Quantum Science|Quantum Science|Superconductor Science|.*Science and Materials)\b'
+    exclude_pattern = r'\b(Small Science|Journal of.*Science|.*Science & Technology|Science China|Materials Science|IOP Science|Advanced Science|Applied Surface Science|APS Open Science|Light: Science(?:\s*&\s*[^,]*)?|Chemical Science|Structural Science|Advanced Materials Technologies|Progress in Natural Science|Science and Technology(?: of)?|Solid-State Science(?:\s*&\s*Research)?|Surface Science|Cell Reports Physical Science|Mechanics of Advanced Materials and Structures|AVS Quantum Science|Quantum Science|Superconductor Science|.*Science and Materials)\b'
     exclude_regex = re.compile(exclude_pattern, re.IGNORECASE)
 
     keyword_paragraphs: Dict[str, Set[str]] = {}
@@ -195,12 +195,8 @@ def save_to_markdown(paragraphs: Dict[str, Set[str]], file_name: str = "FileScho
 
 if __name__ == "__main__":
     # 文件路径设置
-    new_file = "merged_eml_content_20260718_174927.txt"  # 本次新文件
+    new_file = "merged_eml_content_20260729_120705.txt"  # 本次新文件
     old_files = [  # 手动控制参与比较的旧文件范围
-        "merged_eml_content_20250627_205231.txt",
-        "merged_eml_content_20250713_201346.txt",
-        "merged_eml_content_20250722_145114.txt",
-        "merged_eml_content_20250728_151056.txt",
         "merged_eml_content_20250805_190903.txt",
         "merged_eml_content_20250810_221059.txt",
         "merged_eml_content_20250820_141746.txt",
@@ -225,6 +221,7 @@ if __name__ == "__main__":
         "merged_eml_content_20260706_190337.txt",
         "merged_eml_content_20260710_154551.txt",
         "merged_eml_content_20260718_172442.txt",
+        "merged_eml_content_20260718_174927.txt"
         # 可以添加或删除旧文件来手动控制比较范围
     ]
     output_file = "FileScholar.md"  # 输出文件名

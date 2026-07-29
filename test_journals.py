@@ -121,6 +121,14 @@ Metallic two-dimensional (2D) materials enable van der Waals (vdW) contacts that
         self.assertEqual(diff_paragraphs, {}, "同一篇文章的不同抓取内容不应在 diff 中被当作新增")
 
     # Negative test cases for excluded journals
+    def test_aps_open_science(self):
+        sample_text = """[PDF] Anti-higher-order Weyl semimetal
+CM Miao, YH Wan, QF Sun - APS Open Science, 2026
+Higher-order topology extends the bulk-boundary correspondence by enabling corner or hinge localized states. Here, we identify an anti-higher-order Weyl semimetal, a three-dimensional topological phase in which the conventional …"""
+        paragraphs = [sample_text]
+        result = filter_paragraphs_containing_keywords(paragraphs)
+        self.assertNotIn('Science', result)
+
     def test_avs_quantum_science(self):
         sample_text = """Higher-fold topological excitations in phononic and electronic phases of chiral-type BaXY (X= Pt, Pd; Y= P, As, Sb, Bi) materials: A first-principles investigation
 B Paul, S PC, RAB Villaos, ZQ Huang, H Lin… - AVS Quantum Science, 2025
