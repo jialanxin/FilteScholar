@@ -185,6 +185,13 @@ In low-dimensional superconducting systems, novel properties emerge due to quant
         result = filter_paragraphs_containing_keywords(paragraphs)
         self.assertNotIn('Science', result)
 
+    def test_ieee_transactions_on_network_science_and_engineering(self):
+        sample_text = """[HTML] Network analysis for complex systems
+A Researcher, B Researcher… - IEEE Transactions on Network Science and Engineering, 2026
+This paper studies network structure and dynamics."""
+        result = filter_paragraphs_containing_keywords([sample_text])
+        self.assertNotIn('Science', result)
+
     def test_advanced_science(self):
         sample_text = """[HTML] New approaches in nanotechnology
 B Lee… - Advanced Science, 2024

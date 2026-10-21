@@ -1,4 +1,5 @@
 import email
+import mailbox
 from bs4 import BeautifulSoup
 from pathlib import Path
 import argparse
@@ -14,42 +15,57 @@ def timestamped_output_path(now=None):
     timestamp = current_time.strftime("%Y%m%d_%H%M%S")
     return Path(f"{OUTPUT_PREFIX}_{timestamp}.txt")
 
+def message_to_text(msg):
+    """Extract readable text from a single email message."""
+    text = " "
+
+    for part in msg.walk():
+        if part.get_content_type() == "text/html":
+            html_content = part.get_payload(decode=True)
+            if isinstance(html_content, bytes):
+                html_content = html_content.decode("utf-8", "ignore")
+            # Ensure we have a string before passing to BeautifulSoup
+            if not isinstance(html_content, str):
+                html_content = str(html_content)
+            # 解析HTML内容并提取文本
+            soup = BeautifulSoup(html_content, 'html.parser')
+
+            if soup.body and soup.body.div:
+                for child in soup.body.div.contents:
+                    text += child.get_text()
+                    text += "\n"
+            else:
+                # If no body or div, just get all text
+                text += soup.get_text()
+
+    return text
+
+
 def eml_to_text(eml_file):
     with open(eml_file, 'rb') as f:
-        msg = email.message_from_binary_file(f)
-        
-        text = " "
-        
-        for part in msg.walk():
-            if part.get_content_type() == "text/html":
-                html_content = part.get_payload(decode=True)
-                if isinstance(html_content, bytes):
-                    html_content = html_content.decode("utf-8", "ignore")
-                # Ensure we have a string before passing to BeautifulSoup
-                if not isinstance(html_content, str):
-                    html_content = str(html_content)
-                # 解析HTML内容并提取文本
-                soup = BeautifulSoup(html_content, 'html.parser')
-                
-                if soup.body and soup.body.div:
-                    for child in soup.body.div.contents:
-                        text += child.get_text()
-                        text += "\n"
-                else:
-                    # If no body or div, just get all text
-                    text += soup.get_text()
-        
-        
-        return text
+        raw = f.read()
+
+    # mbox 格式：文件以 "From " 分隔行开头，里面可能拼接了多封邮件
+    if raw.startswith(b'From '):
+        mbox = mailbox.mbox(eml_file)
+        return "\n".join(message_to_text(msg) for msg in mbox)
+
+    # 单封 .eml 文件
+    msg = email.message_from_bytes(raw)
+    return message_to_text(msg)
     
 
 def process_eml_files(directory, eml_contents):
     for item in directory.iterdir():
         if item.is_file():
-            if item.suffix.lower() == '.eml':
+            is_extensionless = item.suffix == '' and not item.name.startswith('.')
+            if item.suffix.lower() == '.eml' or is_extensionless:
                 print("Parsing:", item.name)
-                eml_text = eml_to_text(item)
-                eml_contents.append(eml_text)
+                try:
+                    eml_text = eml_to_text(item)
+                    eml_contents.append(eml_text)
+                except Exception as e:
+                    print(f"跳过 {item.name}: {e}")
             elif item.suffix.lower() == '.txt':
                 print("Appending:", item.name)
         elif item.is_dir():
@@ -66,7 +82,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.folder is None:  # 检查 args.folder 是否为 None
-        script_dir = Path("./merged_20260719_20260728")  # 默认相对路径
+        script_dir = Path("./merged_20261017_20261019")  # 默认相对路径
     else:
         script_dir = Path(args.folder)
     # 确保路径存在并且是一个目录
